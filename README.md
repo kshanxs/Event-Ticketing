@@ -1,13 +1,14 @@
 # Event-Ticketing_June2023
 
 
-NFT Ticket/Event Attributes:   Event Name
-                    Event Address
-                    Event Start Date
-                    Event End Date
-                    Event Start Time
-                    Event End Time
-                    Event Timezone
+NFT Ticket/Event Attributes: <br>  
+                    Event Name <br>
+                    Event Address<br>
+                    Event Start Date<br>
+                    Event End Date<br>
+                    Event Start Time<br>
+                    Event End Time<br>
+                    Event Timezone<br><br>
 
 ***Users can:***
 (Some of these won't be implemented in the first version.)
