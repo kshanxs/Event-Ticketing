@@ -31,7 +31,11 @@ NFT Ticket/Event Attributes: <br>
 
 
 ***Security Concerns:***
-1. Need to implement Attestations - TBD (Verify the Ticket truly belongs to the person who claims it)
+1. Need to implement Attestations - TBD (Verify the Ticket truly belongs to the person who claims it)<br>
+https://github.com/orgs/ethereum-optimism/projects/31/views/3?pane=issue&itemId=26603748 <br>
+https://docs.attest.sh/docs/learn/attestations <br>
+https://community.optimism.io/docs/identity/atst-v1/ <br>
+https://www.optimism.io/attestation-terms <br>
 2. Need to prevent scalping
 3. Need to prevent bots
 4. Need to prevent fraud
