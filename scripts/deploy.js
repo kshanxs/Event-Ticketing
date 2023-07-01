@@ -1,3 +1,33 @@
+// SPDX-License-Identifier: UNLICENSED
+const { ethers } = require("hardhat");
+
+async function main() {
+
+    // Setup accounts & variables
+    const [deployer] = await ethers.getSigners()
+
+    console.log("Deploying contracts with the account:", deployer.address);
+    const eventTicketing = await ethers.deployContract("EventTicketing", [20, "bacamp.dev", "BCAMP Fall 2023", 1659406800]);
+    await eventTicketing.waitForDeployment()
+    console.log("EventTicketing deployed to:", await eventTicketing.getAddress());
+
+}
+
+// Run the deployment script
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+
+
+/*
+
+
+
+
+
 // We require the Hardhat Runtime Environment explicitly here. This is optional
 // but useful for running the script in a standalone fashion through `node <script>`.
 //
@@ -31,3 +61,4 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+*/

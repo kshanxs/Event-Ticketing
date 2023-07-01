@@ -36,7 +36,8 @@ https://github.com/orgs/ethereum-optimism/projects/31/views/3?pane=issue&itemId=
 https://docs.attest.sh/docs/learn/attestations <br>
 https://community.optimism.io/docs/identity/atst-v1/ <br>
 https://www.optimism.io/attestation-terms <br>
-2. Need to prevent scalping
+   https://docs.attest.sh/docs/Use%20Cases/ticketing-systems <br>
+3. Need to prevent scalping
 3. Need to prevent bots
 4. Need to prevent fraud
 5. Need to prevent double spending

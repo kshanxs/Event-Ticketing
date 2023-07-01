@@ -12,79 +12,137 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, AccessControl {
     using Counters for Counters.Counter;
 
-    Counters.Counter private _tokenIdCounter;
+    Counters.Counter private _seatIdCounter;
 
-    //setting up max ticket numbers
+    //setting up the event
     uint256 public maxTickets;
-    //Setting up event location
     string public eventLocation;
-    //Setting up event time
     uint256 public eventTime;
-    //Setting up event Name
     string public eventName;
+    uint256 public cost;
 
-    //Adding role setup for ticket scanner and mapping for 
+    //setting up the ticket scanner role
     bytes32 public constant TICKET_SCANNER_ROLE = keccak256("TICKET_SCANNER_ROLE");
     mapping(address => uint256) public ticketScannerAddresses;
 
-    //Setting up ticket struct and related info
+    //setting up ticket struct and related info
     struct Ticket {
         uint256 seatNumber; // Seat number
         uint256 cost; // Cost to buy
         uint256 date; // Date for ticket, this will be stored as a timestamp
         bool hasBeenScanned; // Boolean variable indicating if the ticket has been used
-        bool isValid; // Boolean varible for if ticket has passed event date
+        bool isValid; // Boolean variable for if ticket has passed event date
+        address purchaser; // Wallet address of the purchaser (0=not sold yet)
     }
 
-    // Create a mapping from ticket IDs to Ticket structs
+    // Create tickets for this event
     mapping(uint256 => Ticket) public tickets;
 
-    //ticket scanning event 
+    //Emit an event every time a ticket is scanned
     event TicketScanned(uint256 ticketId, address scanner);
-    //ticket revoking event
+
+    //Emit an event every time a ticket is revoked
     event TicketRevoked(uint256 ticketId);
 
+    // Emit an event every time a ticket is created
+    event TicketCreated(uint256 ticketId, address creator);
 
+    // Emit an event every time a ticket is purchased
+    event TicketBought(uint256 ticketId, address buyer);
+
+
+    // This contract sets up the event
     constructor(uint256 _maxTickets, string memory _eventLocation, string memory _eventName, uint256 _eventTime) ERC721("EventTicketing", "EVTK") {
         maxTickets = _maxTickets;
         eventLocation = _eventLocation;
         eventTime = _eventTime;
         eventName = _eventName;
+        cost = 100;
+
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     function _baseURI() internal pure override returns (string memory) {
         return "http://www.tobedetermined.com";
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
-        //setting up revert if someone tries to mint more tokens 
-        require(tokenId <= maxTickets, "Max number of tickets already minted");
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
+    function safeMint(uint256 numTickets) public onlyOwner {
+        require(numTickets <= maxTickets, "Max number of tickets already minted");
+        for (uint256 i = 0; i < numTickets; i++) {
+            uint256 seatId = _seatIdCounter.current();
+            _seatIdCounter.increment();
+            _safeMint(msg.sender, seatId);
+        }
+    }
+
+    function seatTaken(uint256 _seat) public view returns (bool) {
+        return tickets[_seat].purchaser != address(0);
     }
 
     function setupTicketScannerRoles(address ticketScanner) public onlyOwner {
         grantRole(TICKET_SCANNER_ROLE, ticketScanner);
     }
 
-    function createTicket(uint256 _ticketId, uint256 _seatNumber, uint256 _cost, uint256 _date) public {
+    function createTicket(uint256 _ticketId, uint256 _seatNumber, uint256 _cost, uint256 _date) public onlyOwner {
+
+        // Check that the seat number is not already in use
+        require(!seatTaken(_seatNumber), "Seat already created");
+        // Check that the ticketId is not greater than the maxTickets
+        require(_ticketId <= maxTickets, "Ticket ID is greater than maxTickets");
+        // Check that the seat number is not greater than the maxTickets
+        require(_seatNumber <= maxTickets, "Seat number is greater than maxTickets");
+        // Check that enough minted tickets exist
+        require(_ticketId <= _seatIdCounter.current(), "Not enough minted tickets");
+
         // Create a new Ticket struct in memory
         Ticket memory newTicket = Ticket({
             seatNumber: _seatNumber,
             cost: _cost,
             date: _date,
             hasBeenScanned: false,
-            isValid: true
+            isValid: true,
+            purchaser: address(0)
         });
 
         // Store the new ticket in the tickets mapping
         tickets[_ticketId] = newTicket;
+
+        emit TicketCreated(_ticketId, msg.sender);
+
+    }
+
+    // Create a function to allow a user to Buy a ticket
+    function buyTicket (uint256 _seatNumber ) public payable {
+        // Check that the seat number is not already in use
+        require(!seatTaken(_seatNumber), "Seat already taken");
+        // Check that enough minted tickets exist
+        require(_seatNumber <= _seatIdCounter.current(), "Not enough minted tickets");
+        // Check that the ticket is valid
+        require(tickets[_seatNumber].isValid == true, "Ticket is not valid");
+        // Check that the user has paid enough
+        require(msg.value >= tickets[_seatNumber].cost, "Not enough funds sent");
+
+        // Update the ticket struct in memory
+        tickets[_seatNumber].purchaser = msg.sender;
+
+        // Transfer the ticket to the user
+        _safeMint(msg.sender, _seatNumber);
+
+        // Refund any overpayment
+        if (msg.value > tickets[_seatNumber].cost) {
+            payable(msg.sender).transfer(msg.value - tickets[_seatNumber].cost);
+        }
+
+        emit TicketBought(_seatNumber, msg.sender);
+    }
+
+    // Function to get the price of a ticket
+    function ticketPrice(uint256 ticket) public view returns (uint256) {
+        // Return the desired ticket price
+        return tickets[ticket].cost;
     }
 
     // The following functions are overrides required by Solidity.
-
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
         internal
         override(ERC721, ERC721Enumerable)
@@ -128,37 +186,9 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         emit TicketRevoked(ticketId);
     }
 
-/*
-//////////////////////////////Saving for later if needed\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//#####################################################################################//
-    //// function listEvent ()
-    //// List an Event
-    //// This can be done by_______?smart contract owner? or anyone?
-
-    //// function removeEvent ()
-    //// Removes an Event.
-    //// This can be done by the the event creator only
-    //// If the event has tickets sold, then the event cannot be removed
-
-    // function getEvents()
-    // Get a list of events
-    // This can be done by anyone
-
-    //function buy()
-    // Buy the NFT and get the ticket
-    // Calls the mint function plus some other stuff:
-        // Options might be:
-            // Implement premium ticket options, tiers or packages that include perks like backstage passes, meet-and-greets, or exclusive merchandise
-            // Incorporate a loyalty program that rewards users for their ticket purchases and engagement.
-            // Issue loyalty points that can be redeemed for discounts, exclusive offers, or priority access to future events.
-            // Include dynamic pricing, auctions.
-        // This function should be called by the user
-
-
-    //getLoyaltyPoints()
-    // Get the loyalty points for a user (not sure if we want or need to do this on chain)
-//########################################################################################//
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Saving the above for later if needed/////////////////////*/
+    function getNumTicketsMinted() public view returns (uint256) {
+        return _seatIdCounter.current();
+    }
 
     //function withdraw()
     function withdraw() external onlyOwner {
