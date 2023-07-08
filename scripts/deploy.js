@@ -1,64 +1,20 @@
-// SPDX-License-Identifier: UNLICENSED
-const { ethers } = require("hardhat");
-
 async function main() {
+  const EventTicketing = await ethers.getContractFactory("EventTicketing");
 
-    // Setup accounts & variables
-    const [deployer] = await ethers.getSigners()
+  // add constructor parameters here
+  const maxTickets = 100;  // replace with your value
+  const eventLocation = "My Event Location";  // replace with your value
+  const eventName = "My Event";  // replace with your value
+  const eventTime = Math.floor(1703484000);  // replace with your value (in UNIX timestamp)
 
-    console.log("Deploying contracts with the account:", deployer.address);
-    const eventTicketing = await ethers.deployContract("EventTicketing", [20, "bacamp.dev", "BCAMP Fall 2023", 1659406800]);
-    await eventTicketing.waitForDeployment()
-    console.log("EventTicketing deployed to:", await eventTicketing.getAddress());
-
+  const eventTicketing = await EventTicketing.deploy(maxTickets, eventLocation, eventName, eventTime);
+  console.log(eventTicketing)
+  console.log("EventTicketing deployed to:", eventTicketing.target);
 }
 
-// Run the deployment script
 main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
-
-
-/*
-
-
-
-
-
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
-const hre = require("hardhat");
-
-async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
-
-  const lockedAmount = hre.ethers.parseEther("0.001");
-
-  const lock = await hre.ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
-
-  await lock.waitForDeployment();
-
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
-}
-
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
+.then(() => process.exit(0))
+.catch((error) => {
   console.error(error);
-  process.exitCode = 1;
+  process.exit(1);
 });
-*/
