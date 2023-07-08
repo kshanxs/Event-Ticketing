@@ -22,7 +22,7 @@ const App = () => {
 
     const EventTicketingFactory = new ethers.ContractFactory(EventTicketingABI, EventTicketingBytecode, signer);
 
-    console.log(EventTicketingFactory);
+    
 
     const eventTicketing = await EventTicketingFactory.deploy(
       maxTickets, 
@@ -31,7 +31,7 @@ const App = () => {
       eventTime
     );
 
-    console.log("EventTicketing deployed to:", eventTicketing.address);
+    console.log("EventTicketing deployed to:", eventTicketing.target);
   };
 
   return (
