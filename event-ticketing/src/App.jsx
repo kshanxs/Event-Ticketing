@@ -46,7 +46,7 @@ const App = () => {
         <input value={eventLocation} onChange={(e) => setEventLocation(e.target.value)} placeholder="Event Location" />
         <input value={eventName} onChange={(e) => setEventName(e.target.value)} placeholder="Event Name" />
         <input value={eventTime} onChange={(e) => setEventTime(e.target.value)} placeholder="Event Time (eg. 1703484000)" />
-        <button className='deploy-button' onClick={deployContract}>Deploy Contract</button>
+        <button className='deploy-button' onClick={deployContract}>Create Event</button>
         <label value={contractAddress}></label>
       </div>
     </div>
