@@ -28,9 +28,10 @@ input {
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
-  border-radius: 15px;
+  border-radius: 1px;
   padding: 5px;
   text-align: center;
+  width: 200px;
 }
 
 .deploy-button{
@@ -39,7 +40,7 @@ input {
   font-size: 15px;
   background: linear-gradient(45deg, rgb(254,48,114), rgb(255,89,64));
   padding: 12px 30px;
-  border-radius: 30px;
+  border-radius: 20px;
   border: none;
   transition: background 0.3s ease-in-out;
 }
