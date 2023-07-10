@@ -52,9 +52,10 @@ const App = () => {
   return (
     
     <div>
-      <div className='header'>BCAMP 2023 - Event Ticketing Dapp</div>
+      <div> <h1 className='header'>BCAMP 2023 - Event Ticketing Dapp</h1></div>
       <p>Please enter your event data by filling out the fields below:</p>
       <div className='App'>
+
         <input value={maxTickets} onChange={(e) => setMaxTickets(e.target.value)} placeholder="Max Tickets" />
         <input value={eventLocation} onChange={(e) => setEventLocation(e.target.value)} placeholder="Event Location" />
         <input value={eventName} onChange={(e) => setEventName(e.target.value)} placeholder="Event Name" />

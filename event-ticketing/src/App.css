@@ -1,16 +1,23 @@
 .App {
   text-align: center;
+
 }
 
 .header {
+  display: flex;
   font: 50px arial;
   font-weight: bold;
   text-align: center;
+  background: linear-gradient(45deg, rgb(254,48,114), rgb(255,89,64));
+  border-radius: 10px;
+  width: 100%;
+  padding: 20px;
 }
 
 p {
   font: 20px arial;
   text-align: center;
+  
 }
 
 div {
