@@ -66,12 +66,23 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         return "http://www.tobedetermined.com";
     }
 
-    function safeMint(uint256 numTickets) public onlyOwner {
-        require(numTickets <= maxTickets, "Max number of tickets already minted");
-        for (uint256 i = 0; i < numTickets; i++) {
-            uint256 seatId = _seatIdCounter.current();
+    function safeMint() public onlyOwner {
+        uint256 seatId = _seatIdCounter.current();
+        require(seatId <= maxTickets, "Max number of tickets already minted");
+        _seatIdCounter.increment();
+        _safeMint(address(this), seatId);
+    }
+
+    function batchMint(uint256 mintQuantity) public onlyOwner {
+        uint256 seatId = _seatIdCounter.current();
+        require(seatId <= maxTickets, "Max number of tickets already minted or batch will be too large");
+        for(uint256 i = 0; i < mintQuantity, i++){
+            _safeMint(address(this), seatId);
             _seatIdCounter.increment();
-            _safeMint(msg.sender, seatId);
+        } catch Error(string memory reason) {
+            revert(string(abi.encodePacked("Mint Failed :", reason)));
+        } catch {
+            revert("Mint failed: Unknown Error");
         }
     }
 
@@ -111,8 +122,14 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
 
     }
 
+    function batchTicket(uint256 _ticketId, uint256 _seatNumber, uint256 _cost, uint256 _date, uint256 batchSize) public onlyOwner {
+        for(uint256 i = 0; i < batchSize; i++){
+            createTicket(_ticketId, _seatNumber, _cost, _date);
+        }
+    }
+
     // Create a function to allow a user to Buy a ticket
-    function buyTicket (uint256 _seatNumber ) public payable {
+    function buyTicket (uint256 _seatNumber, uint256 ticketId) public payable {
         // Check that the seat number is not already in use
         require(!seatTaken(_seatNumber), "Seat already taken");
         // Check that enough minted tickets exist
@@ -126,9 +143,12 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         tickets[_seatNumber].purchaser = msg.sender;
 
         // Transfer the ticket to the user
-        _safeMint(msg.sender, _seatNumber);
+        ///////////Added this///////
+        transferFrom(address(this), msg.sender, ticketId);
+        ///////////Added this/////// it will transfer from the NFT from the smart contract "address(this)" to the buyer
 
         // Refund any overpayment
+        ///I'm not sure that we need this
         if (msg.value > tickets[_seatNumber].cost) {
             payable(msg.sender).transfer(msg.value - tickets[_seatNumber].cost);
         }
