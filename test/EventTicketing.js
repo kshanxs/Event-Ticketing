@@ -1,4 +1,5 @@
 const { expect } = require("chai");
+const {ethers} = require("hardhat");
 
 describe("EventTicketing", () =>{
 
@@ -44,6 +45,18 @@ describe("EventTicketing", () =>{
       expect(tx)
           .to.emit(eventTicketing, "TicketCreated")
           .withArgs(ticketId);
+    }
+
+  });
+
+  it("should create a batch of tickets", async function () {
+
+    batchMint (0);
+    batchMint (1);
+    batchMint (maxTickets-1);
+    batchMint (maxTickets);
+    batchMint  (maxTicktes +1);
+    
     }
 
   });

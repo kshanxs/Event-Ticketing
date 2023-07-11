@@ -1,5 +1,7 @@
 # Event-Ticketing_June2023
 
+To Run Tests: ```npm run test```
+
 
 NFT Ticket/Event Attributes: <br>  
                     Event Name <br>

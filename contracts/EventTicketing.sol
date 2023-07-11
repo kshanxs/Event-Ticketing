@@ -73,7 +73,9 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         _safeMint(address(this), seatId);
     }
 
-    function batchMint(uint256 mintQuantity) public onlyOwner {
+  
+
+     function batchMint(uint256 mintQuantity) public onlyOwner {
         uint256 seatId = _seatIdCounter.current();
         require(seatId + mintQuantity <= maxTickets, "Max number of tickets already minted or batch will be too large");
         require(mintQuantity > 1, "Need to mint some!");
@@ -82,6 +84,7 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
             _seatIdCounter.increment();
         } 
     }
+
 
     function seatTaken(uint256 _seat) public view returns (bool) {
         return tickets[_seat].purchaser != address(0);
