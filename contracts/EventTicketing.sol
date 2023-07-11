@@ -76,14 +76,10 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
     function batchMint(uint256 mintQuantity) public onlyOwner {
         uint256 seatId = _seatIdCounter.current();
         require(seatId <= maxTickets, "Max number of tickets already minted or batch will be too large");
-        for(uint256 i = 0; i < mintQuantity, i++){
+        for(uint256 i = 0; i < mintQuantity; i++){
             _safeMint(address(this), seatId);
             _seatIdCounter.increment();
-        } catch Error(string memory reason) {
-            revert(string(abi.encodePacked("Mint Failed :", reason)));
-        } catch {
-            revert("Mint failed: Unknown Error");
-        }
+        } 
     }
 
     function seatTaken(uint256 _seat) public view returns (bool) {
@@ -123,8 +119,10 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
     }
 
     function batchTicket(uint256 _ticketId, uint256 _seatNumber, uint256 _cost, uint256 _date, uint256 batchSize) public onlyOwner {
+        uint256 internalTicket = _ticketId;
         for(uint256 i = 0; i < batchSize; i++){
             createTicket(_ticketId, _seatNumber, _cost, _date);
+            internalTicket++;
         }
     }
 
