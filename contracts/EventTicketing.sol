@@ -81,7 +81,7 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         require(mintQuantity > 1, "Need to mint some!");
         for(uint256 i = 0; i < mintQuantity; i++){
             _safeMint(address(this), seatId);
-            _seatIdCounter.increment();
+            seatId++;
         } 
     }
 
