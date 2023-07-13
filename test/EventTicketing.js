@@ -11,8 +11,8 @@ describe("EventTicketing", () =>{
   let owner, ticketScanner, buyer
 
   // Example Event
-  let event = [20, "bcamp.dev", "BCAMP Fall 2023", 1659406800];
-
+  let event = [20, "bcamp.dev", "BCAMP Fall 2023", 1]
+ 
   //Example Ticket
   const ticketId = 1;
   const seatNumber = 1;
@@ -49,20 +49,12 @@ describe("EventTicketing", () =>{
 
   });
 
-  it("should create a batch of tickets", async function () {
 
-    batchMint (0);
-    batchMint (1);
-    batchMint (maxTickets-1);
-    batchMint (maxTickets);
-    batchMint  (maxTicktes +1);
-    
-    }
 
-  });
+
 
   it("should scan tickets", async function () {
-    await eventTicketing.safeMint(1);
+    await eventTicketing.safeMint();
     await eventTicketing.createTicket(ticketId, seatNumber, cost, date);
 
     // Use connect to impersonate the ticketScanner account
@@ -81,7 +73,7 @@ describe("EventTicketing", () =>{
   });
 
   it("should revoke tickets", async function () {
-    await eventTicketing.safeMint(1);
+    await eventTicketing.safeMint();
     await eventTicketing.createTicket(ticketId, seatNumber, cost, date);
 
     let ticket = await eventTicketing.tickets(ticketId);
@@ -101,7 +93,7 @@ describe("EventTicketing", () =>{
   it("should mint tickets", async function () {
 
     // Call the safeMint function
-    await eventTicketing.safeMint(1);
+    await eventTicketing.safeMint();
 
     // Verify that the NFT is recorded as minted
     const seatId = 0; // Set the seat ID to the appropriate value
@@ -109,16 +101,18 @@ describe("EventTicketing", () =>{
 
     // Check can mint max tickets
     for (let i = 1; i <= eventTicketing.maxTickets; i++) {
-      await eventTicketing.safeMint(1);
+      await eventTicketing.safeMint();
     }
 
 
   });
 
+
+
   it("should mint a new ticket when called by the owner", async () => {
     const initialSeatId = await eventTicketing.getNumTicketsMinted();
 
-    await eventTicketing.safeMint(1);
+    await eventTicketing.safeMint();
 
     const finalSeatId = await eventTicketing.getNumTicketsMinted();
     const ownerOfTicket = await eventTicketing.ownerOf(initialSeatId);
@@ -128,7 +122,7 @@ describe("EventTicketing", () =>{
   });
 
   it("should revert if someone other than the owner tries to mint", async () => {
-    await expect(eventTicketing.connect(ticketScanner).safeMint(1)).to.be.revertedWith(
+    await expect(eventTicketing.connect(ticketScanner).safeMint()).to.be.revertedWith(
         "Ownable: caller is not the owner"
     );
   });
@@ -139,7 +133,7 @@ describe("EventTicketing", () =>{
 
     // Mint the maximum number of tickets
     for (let i = 0; i < maxTickets; i++) {
-      await eventTicketing.safeMint(1);
+      await eventTicketing.safeMint();
     }
 
   });
@@ -154,13 +148,41 @@ describe("EventTicketing", () =>{
 
 
     // Mint and create a ticket
-    await eventTicketing.safeMint(1);
+    await eventTicketing.safeMint();
     await eventTicketing.createTicket(ticketId, seatNumber, cost, date);
     await eventTicketing.buyTicket(ticketId, {value: cost});
 
     const isTaken = await eventTicketing.seatTaken(seatNumber);
     expect(isTaken).to.be.true;
   });
+
+
+  it("should create a batch of tickets", async function () {
+
+    const initialSeatId = await eventTicketing.getNumTicketsMinted();
+
+      //await expect(eventTicketing.connect(ticketScanner).batchMint(2)).to.be.revertedWith(
+      //    "Ownable: caller is not the owner"
+      //);
+
+    //expect (batchMint (0)).to.be.false
+
+    // Check just 1 batch mint
+    eventTicketing.batchMint (1);
+    
+    const ownerOfTicket = await eventTicketing.ownerOf(initialSeatId);
+    expect(ownerOfTicket).to.equal(owner.address);
+
+    const finalSeatId = await eventTicketing.getNumTicketsMinted();
+    expect(finalSeatId).to.equal(initialSeatId + BigInt(1));
+    
+
+    //batchMint (eventTicketing.maxTickets-1);
+    //batchMint (eventTicketing.maxTickets);
+    //batchMint  (eventTicketing.maxTicktes +1);
+    
+    });
+
 
   it('should allow a user to buy a ticket', async function() {
 
@@ -170,7 +192,7 @@ describe("EventTicketing", () =>{
     const buyerBalanceBefore = await ethers.provider.getBalance(buyer); //10000000000000000000000n wei
 
     // Mint and create a ticket
-    await eventTicketing.safeMint(1);
+    await eventTicketing.safeMint();
     await eventTicketing.createTicket(ticketId, seatNumber, cost, date);
 
     // Check that a seat is marked as not taken
@@ -207,7 +229,7 @@ describe("EventTicketing", () =>{
   it('should withdraw contract balance', async function () {
 
     // Populate the contract with some funds:
-    await eventTicketing.safeMint(1);
+    await eventTicketing.safeMint();
 
     await eventTicketing.createTicket(ticketId, seatNumber, cost, date);
     await eventTicketing.connect(buyer).buyTicket(ticketId, {value: cost});
@@ -243,7 +265,7 @@ describe("EventTicketing", () =>{
   it('should make sure ticket Validity works', async function () {
 
     // Mint and create a ticket
-    await eventTicketing.safeMint(1);
+    await eventTicketing.safeMint();
     await eventTicketing.createTicket(ticketId, seatNumber, cost, date);
     await eventTicketing.buyTicket(ticketId, {value: cost});
 
