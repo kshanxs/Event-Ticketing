@@ -49,4 +49,5 @@ const createQRCode = (seatNumber, cost, date, hasBeenScanned, isValid, purchaser
             })
 }
 
-createQRCode(111, 222, "07/25/23", false, true, "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+//createQRCode(111, 222, "07/25/23", false, true, "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+createQRCode("Jeanie is cool", "Lil Benny is Cool", "Big Benny is cool", "We have fun", "Ha ha ha good times", "How cool is this?");
