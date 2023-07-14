@@ -4,7 +4,7 @@
 
 * This document details the findings of a security review performed by Team NFT Ticketing on Team Flash Loan Arbitrage's project.
 
-## Project Summary
+## Project Summary 
 
 The Flash Loan Arbitrage Project aims to create a service that allows users to take advantage of price difference on exchanges in order to create an arbitrage opportunity.
 
