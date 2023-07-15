@@ -7,9 +7,11 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+
 
 /// @custom:security-contact @Bigbadbeard
-contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, AccessControl {
+contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, AccessControl, IERC721Receiver {
     using Counters for Counters.Counter;
 
     Counters.Counter private _seatIdCounter;
@@ -223,5 +225,17 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         require(tickets[ticketId].isValid != false, "Ticket doesn't exist!");
         bool _isValid = tickets[ticketId].isValid;
         return _isValid;
-    }  
+    }
+
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) 
+    public 
+    override 
+    returns (bytes4) {
+        // handle the received token here
+        // you can store token information in a mapping and use it in other functions 
+
+        // Return this function's selector
+        return this.onERC721Received.selector;
+    }
+
 }
