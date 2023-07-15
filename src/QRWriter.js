@@ -41,13 +41,19 @@ const createQRCode = (seatNumber, cost, date, hasBeenScanned, isValid, purchaser
     }
     let stringData = JSON.stringify(data);
 
-    QRCode.toString(stringData, {type: 'terminal'},
-            function (err, QRcode) {
-                if(err) return console.log("error occured")
-
-                console.log(QRcode);
-            })
+    QRCode.toFile(`./QRCodes/qrcode${seatNumber}.png`, stringData, {
+        color: {
+          dark: '#000',  // Black dots
+          light: '#FFF' // Transparent background
+        }
+    }, function (err) {
+        if (err) throw err
+        console.log(`QR code image saved at: ../QRCodes/qrcode${seatNumber}.png`);
+    })
 }
 
 //createQRCode(111, 222, "07/25/23", false, true, "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-createQRCode("Jeanie is cool", "Lil Benny is Cool", "Big Benny is cool", "We have fun", "Ha ha ha good times", "How cool is this?");
+for(var i = 0; i < 3; i++){
+    createQRCode(i, "Lil Benny is Cool", "Big Benny is cool", "We have fun", "Ha ha ha good times", "How cool is this?"); 
+}
+
