@@ -55,6 +55,8 @@ const BuyPage = ({event}) => {
 
   return (
     <div>
+          <div> <h1 className='header'>BCAMP 2023 - BUY YOUR TICKET NOW!</h1></div>
+        <p>Please enter the smart contract address of your event in the field below:</p>
       <input
         type="event smart contract address here"
         placeholder="Enter contract address"
@@ -69,6 +71,8 @@ const BuyPage = ({event}) => {
           <button onClick={() => buyTicket(index)}>Buy</button>
         </div>
       ))} */}
+
+<button className='buyButton' onClick={() => event.buyTicket(1,1)}>Buy Ticket!</button>
     </div>
   );
 };
