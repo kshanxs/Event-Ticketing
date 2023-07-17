@@ -1,11 +1,15 @@
-import React, { ethers } from 'ethers';
+import React from 'react';
+import { ethers } from 'ethers';
 import { useState } from 'react';
-import eventTicketingArtifact from './EventTicketing.json';  
-import './App.css'; // Import the app.css file
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import BuyPage from './pages/BuyPage';
+import EventPage from './pages/EventPage';
 
+// ABIs
+import eventTicketingArtifact from './abis/EventTicketing.json';  
 
-
-// ...existing component code...
+// Styling
+import './App.css';
 
 const App = () => {
   const [maxTickets, setMaxTickets] = useState("");
@@ -13,7 +17,9 @@ const App = () => {
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [eventTime, setEventTime] = useState("");
+  const [contract, setContract] = useState(null);
   const [contractAddress, setContractAddress] = useState("");
+  
   const provider = new ethers.BrowserProvider(window.ethereum);
 
   let eventDateTimeInUint256 = 0;
@@ -43,6 +49,7 @@ const App = () => {
       BigInt(eventDateTimeInUint256)
     );
 
+    setContract(eventTicketing);
     setContractAddress(eventTicketing.target);
     console.log("EventTicketing deployed to:", eventTicketing.target);
   };
@@ -50,21 +57,29 @@ const App = () => {
   
 
   return (
-    
-    <div>
-      <div> <h1 className='header'>BCAMP 2023 - Event Ticketing Dapp</h1></div>
-      <p>Please enter your event data by filling out the fields below:</p>
-      <div className='App'>
-
-        <input value={maxTickets} onChange={(e) => setMaxTickets(e.target.value)} placeholder="Max Tickets" />
-        <input value={eventLocation} onChange={(e) => setEventLocation(e.target.value)} placeholder="Event Location" />
-        <input value={eventName} onChange={(e) => setEventName(e.target.value)} placeholder="Event Name" />
-        <input value={eventDate} onChange={(e) => setEventDate(e.target.value)} placeholder="Event Date (2023-07-10)" />
-        <input value={eventTime} onChange={(e) => setEventTime(e.target.value)} placeholder="Event Time (12:00)" />
-        <button className='deploy-button' onClick={deployContract}>Create Event</button>
-        <label value={contractAddress}></label>
-      </div>
-    </div>
+    <Router>
+   
+      <Routes>
+      <Route path="/" element={ <EventPage 
+                                  maxTickets={maxTickets}
+                                  setMaxTickets={setMaxTickets}
+                                  eventLocation={eventLocation}
+                                  setEventLocation={setEventLocation}
+                                  eventName={eventName}
+                                  setEventName={setEventName}
+                                  eventDate={eventDate}
+                                  setEventDate={setEventDate}
+                                  eventTime={eventTime}
+                                  setEventTime={setEventTime}
+                                  contract={contract}
+                                  setContract={setContract}
+                                  contractAddress={contractAddress}
+                                  setContractAddress={setContractAddress}
+                                  deployContract={deployContract}
+                                /> } />
+          <Route path="/buy" element={<BuyPage contract={contract} />} />
+        </Routes>
+    </Router>
   );
   
 }
