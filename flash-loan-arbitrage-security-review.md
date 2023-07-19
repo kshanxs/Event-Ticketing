@@ -56,7 +56,7 @@ The Flash Loan Arbitrage Project aims to create a service that allows users to t
 
 ## Approach and Method
 
-This report has been prepared for Bcamp Flash Loan Arbitrage to discover issues and vulnerabilities in the source code of the Team Flash Loan Arbitrage project as well as any contract dependencies that were not part of an officially recognized library. A good examination has been performed, utilizing Manual Review.
+This report has been prepared for Bcamp Flash Loan Arbitrage to discover issues and vulnerabilities in the source code of the Team Flash Loan Arbitrage project as well as any contract dependencies that were not part of an officially recognized library. A good examination has been performed, utilizing Manual Review. We used EthLint, MythX, and manual techniques to generate the follwing results.
 
 ## 1.0 UnderFlow/OverFlow Bug- Minor
 
