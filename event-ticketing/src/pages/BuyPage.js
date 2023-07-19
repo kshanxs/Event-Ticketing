@@ -48,12 +48,13 @@ const BuyPage = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       if (contract) {
-        // Assuming your contract has a function to get the total number of tickets
         const totalTickets = await contract.getNumTicketsMinted();
+        console.log ("total minted tickets so far:", totalTickets.toString());
+       
         const tickets = [];
         for (let i = 0; i < totalTickets; i++) {
           // Assuming your contract has a function to get the details of a ticket by its ID
-          const ticket = await contract.getTicket(i);
+          const ticket = await contract.tickets(i);
           tickets.push(ticket);
         }
         setTickets(tickets);
@@ -65,10 +66,9 @@ const BuyPage = () => {
 
 
   const loadBlockchainData = async () => {
-    //const provider = new ethers.providers.Web3Provider(window.ethereum);
-    //console.log (provider);
-    const provider2 = new ethers.BrowserProvider(window.ethereum)
-    console.log(provider2);
+   
+    const provider = new ethers.BrowserProvider(window.ethereum)
+    console.log(provider);
 
     setProvider(provider);
     
@@ -86,19 +86,22 @@ const BuyPage = () => {
   }
 
   useEffect(() => {
-    if (contractAddress !== "") {
+    {
       loadBlockchainData();
     }
   }, [contractAddress]);
   
 
   const buyTicket = async (_seat) => {
+    const cost = ethers.parseUnits('1', 'ether')
     if (contract) {
+        const numMinted = await contract.getNumTicketsMinted();
+        console.log("minted",numMinted.toString());
+        console.log("seat requested:", _seat);
         const signer = await provider.getSigner()
-        console.log("in buy ticket with signer:", signer, "and seat: ", _seat, "and cost: ", contract.cost)
-        const transaction = await contract.connect(signer).buyTicket(_seat, { value: contract.cost })
-        const tx = await transaction.wait()
-        console.log(tx);
+        console.log("signer is:", signer);
+        const transaction = await contract.connect(signer).buyTicket(_seat, 0, { value: cost } )
+        await transaction.wait()
     }
   }; 
 
@@ -126,8 +129,8 @@ const BuyPage = () => {
          console.log("contract is: ", contract);
         }
         }>Show Event Tickets!</button>
-    <label>Your Account Address: {}</label>
-    <label>Number of Tickets Minted: {}</label>
+    <label>Your Wallet Address: {}</label>
+    <label>Number of Tickets Left: {}</label>
     </div>
   );
 };
