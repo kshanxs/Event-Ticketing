@@ -9,4 +9,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'images', `${subdomain}.jpg`));
 });
 
+app.get('/QRCodes/:name', (req, res) => {
+  const fileName = req.params.name;
+  res.sendFile(path.join(__dirname, 'QRCodes', `${fileName}.png`));
+});
+
 app.listen(3000, () => console.log('Server is running...'));
+

@@ -12,7 +12,7 @@ const createQRCode = (seatNumber, cost, date, hasBeenScanned, isValid, purchaser
     }
     let stringData = JSON.stringify(data);
 
-    QRCode.toFile(`./QRCodes/qrcode${seatNumber}.png`, stringData, {
+    QRCode.toFile(`./QRCodes/${seatNumber}.png`, stringData, {
         color: {
           dark: '#000',  // Black dots
           light: '#FFF' // Transparent background
