@@ -2,16 +2,24 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol"; //added this
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+<<<<<<< HEAD
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 
 /// @custom:security-contact @Bigbadbeard
 contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, AccessControl, IERC721Receiver {
+=======
+import "hardhat/console.sol";
+
+/// @custom:security-contact @Bigbadbeard
+ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, AccessControl, IERC721Receiver {
+>>>>>>> d15ea834949384988fb17fce02b29f64f6910954
     using Counters for Counters.Counter;
 
     Counters.Counter private _seatIdCounter;
@@ -59,13 +67,19 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         eventLocation = _eventLocation;
         eventTime = _eventTime;
         eventName = _eventName;
-        cost = 100;
+        cost = uint256(100);
 
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
+    
+    
 
     function _baseURI() internal pure override returns (string memory) {
         return "http://www.tobedetermined.com";
+    }
+
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external override returns (bytes4) {
+        return this.onERC721Received.selector;
     }
 
     function safeMint() public onlyOwner {
@@ -76,7 +90,6 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
     }
 
   
-
      function batchMint(uint256 mintQuantity) public onlyOwner {
         uint256 seatId = _seatIdCounter.current();
         require(seatId + mintQuantity <= maxTickets, "Max number of tickets already minted or batch will be too large");
@@ -84,6 +97,7 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         for(uint256 i = 0; i < mintQuantity; i++){
             _safeMint(address(this), seatId);
             seatId++;
+            _seatIdCounter.increment();
         } 
     }
 
@@ -120,6 +134,10 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         // Store the new ticket in the tickets mapping
         tickets[_ticketId] = newTicket;
 
+        //console.log("The Ticket is: %s", newTicket);
+        
+
+
         emit TicketCreated(_ticketId, msg.sender);
 
     }
@@ -137,25 +155,25 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         // Check that the seat number is not already in use
         require(!seatTaken(_seatNumber), "Seat already taken");
         // Check that enough minted tickets exist
-        require(_seatNumber <= _seatIdCounter.current(), "Not enough minted tickets");
+        require(ticketId <= _seatIdCounter.current(), "Not enough minted tickets");
         // Check that the ticket is valid
-        require(tickets[_seatNumber].isValid == true, "Ticket is not valid");
+        require(tickets[ticketId].isValid == true, "Ticket is not valid");
         // Check that the user has paid enough
         require(msg.value >= tickets[_seatNumber].cost, "Not enough funds sent");
 
         // Update the ticket struct in memory
         tickets[_seatNumber].purchaser = msg.sender;
 
+
+
         // Transfer the ticket to the user
         ///////////Added this///////
+        _approve(msg.sender, ticketId);
         transferFrom(address(this), msg.sender, ticketId);
         ///////////Added this/////// it will transfer from the NFT from the smart contract "address(this)" to the buyer
 
-        // Refund any overpayment
-        ///I'm not sure that we need this
-        if (msg.value > tickets[_seatNumber].cost) {
-            payable(msg.sender).transfer(msg.value - tickets[_seatNumber].cost);
-        }
+        payable(msg.sender).transfer(msg.value - tickets[_seatNumber].cost);
+        
 
         emit TicketBought(_seatNumber, msg.sender);
     }
@@ -225,6 +243,7 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
         require(tickets[ticketId].isValid != false, "Ticket doesn't exist!");
         bool _isValid = tickets[ticketId].isValid;
         return _isValid;
+<<<<<<< HEAD
     }
 
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) 
@@ -239,3 +258,7 @@ contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, 
     }
 
 }
+=======
+    }  
+}
+>>>>>>> d15ea834949384988fb17fce02b29f64f6910954
