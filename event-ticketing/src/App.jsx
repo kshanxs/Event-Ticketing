@@ -34,6 +34,7 @@ const App = () => {
   }
 
   const deployContract = async () => {
+    console.log("calling deployContract")
     const signer = await provider.getSigner();
     const EventTicketingABI = eventTicketingArtifact.abi;
     const EventTicketingBytecode = eventTicketingArtifact.bytecode;
@@ -57,6 +58,7 @@ const App = () => {
   
 
   return (
+    
     <Router>
    
       <Routes>
@@ -77,7 +79,10 @@ const App = () => {
                                   setContractAddress={setContractAddress}
                                   deployContract={deployContract}
                                 /> } />
-          <Route path="/buy" element={<BuyPage contract={contract} />} />
+          <Route path="/buy" element={ <BuyPage 
+                                     
+
+                                              />} />
         </Routes>
     </Router>
   );
