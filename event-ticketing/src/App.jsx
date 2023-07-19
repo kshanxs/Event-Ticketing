@@ -1,5 +1,6 @@
 import React from 'react';
 import { ethers } from 'ethers';
+//import { ethers } from 'hardhat';
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import BuyPage from './pages/BuyPage';
@@ -17,12 +18,12 @@ const App = () => {
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [eventTime, setEventTime] = useState("");
+  const [eventDateTime, setEventDateTime] = useState(0);
   const [contract, setContract] = useState(null);
   const [contractAddress, setContractAddress] = useState("");
-  
   const provider = new ethers.BrowserProvider(window.ethereum);
 
-  let eventDateTimeInUint256 = 0;
+  const cost = ethers.parseUnits('1', 'ether')
 
   const convertDateTime = async () => {
     const eventDateTime = `${eventDate} ${eventTime}`;
@@ -30,7 +31,7 @@ const App = () => {
     const unixTimestamp = dateObject.getTime();
     const unixTimestampInSeconds = Math.floor(unixTimestamp / 1000);
     const timeInUint256 = dateObject.getHours() * 3600 + dateObject.getMinutes() * 60;
-    eventDateTimeInUint256 = unixTimestampInSeconds * Math.pow(2, 128) + (timeInUint256);
+    setEventDateTime(unixTimestampInSeconds * Math.pow(2, 128) + (timeInUint256));
   }
 
   const deployContract = async () => {
@@ -38,21 +39,33 @@ const App = () => {
     const signer = await provider.getSigner();
     const EventTicketingABI = eventTicketingArtifact.abi;
     const EventTicketingBytecode = eventTicketingArtifact.bytecode;
-    
     const EventTicketingFactory = new ethers.ContractFactory(EventTicketingABI, EventTicketingBytecode, signer);
     
     convertDateTime();
-
+ 
     const eventTicketing = await EventTicketingFactory.deploy(
       maxTickets, 
       eventLocation, 
       eventName, 
-      BigInt(eventDateTimeInUint256)
+      BigInt(eventDateTime)
     );
 
     setContract(eventTicketing);
     setContractAddress(eventTicketing.target);
     console.log("EventTicketing deployed to:", eventTicketing.target);
+
+    // Mint Tickets for this event
+    await eventTicketing.safeMint()
+    //console.log ("minted tickets")
+
+    //console.log(await eventTicketing.maxTickets);
+    //const numTicketsMinted =  await eventTicketing.getNumTicketsMinted();
+    //console.log("total tickets minted:", numTicketsMinted);
+
+    // Create the Tickets for this event based on the event date
+    await eventTicketing.createTicket(0, 0, cost, BigInt(eventDateTime))
+     
+      
   };
 
   

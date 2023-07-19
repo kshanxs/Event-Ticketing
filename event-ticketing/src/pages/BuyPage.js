@@ -1,5 +1,5 @@
 //contract address: 0x5FbDB2315678afecb367f032d93F642f64180aa3 goerli is 0x9f125B256910F074cCe8c2854eAc4Be4686Fd3f2
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 
 import React, { useState, useEffect } from 'react';
 
@@ -14,7 +14,7 @@ const BuyPage = () => {
  
   const [tickets, setTickets] = useState([]);
 
-  const [account, setAccount] = useState(null)
+  //const [account, setAccount] = useState(null)
   const [provider, setProvider] = useState(null);
 
   const [contract, setContract] = useState(null);
@@ -65,18 +65,24 @@ const BuyPage = () => {
 
 
   const loadBlockchainData = async () => {
-    setProvider(new ethers.BrowserProvider(window.ethereum));
-   
+    //const provider = new ethers.providers.Web3Provider(window.ethereum);
+    //console.log (provider);
+    const provider2 = new ethers.BrowserProvider(window.ethereum)
+    console.log(provider2);
 
-    //const network = await provider.getNetwork()
-    const eventTicketing = new ethers.Contract(contractAddress, EventTicketing, provider)
+    setProvider(provider);
+    
+    console.log(contractAddress, provider, EventTicketing.abi);
+    const eventTicketing = new ethers.Contract(contractAddress, EventTicketing.abi, provider)
+    console.log(eventTicketing)
+   
     setContract(eventTicketing)
 
-    window.ethereum.on('accountsChanged', async () => {
+   /*  window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
       const account = ethers.getAddress(accounts[0])
       setAccount(account)
-    })
+    }) */
   }
 
   useEffect(() => {
@@ -86,13 +92,10 @@ const BuyPage = () => {
   }, [contractAddress]);
   
 
-
-
-
-
   const buyTicket = async (_seat) => {
     if (contract) {
         const signer = await provider.getSigner()
+        console.log("in buy ticket with signer:", signer, "and seat: ", _seat, "and cost: ", contract.cost)
         const transaction = await contract.connect(signer).buyTicket(_seat, { value: contract.cost })
         const tx = await transaction.wait()
         console.log(tx);
@@ -118,24 +121,15 @@ const BuyPage = () => {
         </div>
       ))}
 
-    <button className='showTickets' onClick={() => contract.buyTicket(1,1)}>Show Event Tickets!</button>
-    <label className='account'>Account: {account}</label>
+    <button className='showTickets' onClick={async() => 
+        {
+         console.log("contract is: ", contract);
+        }
+        }>Show Event Tickets!</button>
+    <label>Your Account Address: {}</label>
+    <label>Number of Tickets Minted: {}</label>
     </div>
   );
 };
-BuyPage.propTypes = {
-    maxTickets: PropTypes.string.isRequired,
-    setMaxTickets: PropTypes.func.isRequired,
-    eventLocation: PropTypes.string.isRequired,
-    setEventLocation: PropTypes.func.isRequired,
-    eventName: PropTypes.string.isRequired,
-    setEventName: PropTypes.func.isRequired,
-    eventDate: PropTypes.string.isRequired,
-    setEventDate: PropTypes.func.isRequired,
-    eventTime: PropTypes.string.isRequired,
-    setEventTime: PropTypes.func.isRequired,
-    contractAddress: PropTypes.string.isRequired,
-    setContractAddress: PropTypes.func.isRequired,};
-
 
 export default BuyPage;
