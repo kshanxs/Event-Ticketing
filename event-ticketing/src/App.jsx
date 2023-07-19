@@ -55,19 +55,12 @@ const App = () => {
     console.log("EventTicketing deployed to:", eventTicketing.target);
 
     // Mint Tickets for this event
-    await eventTicketing.safeMint()
-    //console.log ("minted tickets")
-
-    //console.log(await eventTicketing.maxTickets);
-    //const numTicketsMinted =  await eventTicketing.getNumTicketsMinted();
-    //console.log("total tickets minted:", numTicketsMinted);
-
-    // Create the Tickets for this event based on the event date
-    await eventTicketing.createTicket(0, 0, cost, BigInt(eventDateTime))
-     
-      
+    for (let i = 0; i < maxTickets; i++) {
+      await eventTicketing.safeMint()
+      await eventTicketing.createTicket(i, i, cost, BigInt(eventDateTime))  
+    }
+    
   };
-
   
 
   return (

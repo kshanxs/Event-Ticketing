@@ -63,3 +63,12 @@ label {
   padding: 20px;
 }
 
+.ticket-tile {
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px;
+  box-sizing: border-box;
+  display: inline-block;
+  width: calc(100% / 4 - 20px); /* replace 4 with the number of tiles per row  */
+}
+

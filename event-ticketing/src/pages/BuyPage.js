@@ -20,31 +20,6 @@ const BuyPage = () => {
   const [contract, setContract] = useState(null);
   const [contractAddress, setContractAddress] = useState("");
   
-  
- /*  useEffect(() => {
-    if (window.ethereum) {
-      setProvider(new ethers.BrowserProvider(window.ethereum));
-    }
-  }, []);
-
-    useEffect(() => {
-    if (provider && props.contractAddress) {
-      const contract = new ethers.Contract(props.contractAddress, EventTicketingABI, provider);
-      console.log(EventTicketingABI);
-      props.setContract(contract); 
-    }
-  }, [provider, props.contractAddress]); 
-  */
-
- /*  useEffect(() => {
-    if (provider ) {
-       //console.log(contract.target);
-       props.setContract(props.contract); // use the same event that was last deployed until above code i can get to work
-       // console.log (contract);
-    }
-  }, [provider]);
-
- */
   useEffect(() => {
     const fetchTickets = async () => {
       if (contract) {
@@ -62,8 +37,6 @@ const BuyPage = () => {
     };
     fetchTickets();
   }, [contract]);
-
-
 
   const loadBlockchainData = async () => {
    
@@ -116,7 +89,7 @@ const BuyPage = () => {
       />
     
     {tickets.map((ticket, index) => (
-        <div key={index}>
+        <div key={index} className="ticket-tile">
           <h2>Ticket {index + 1}</h2>
           <p>Seat Number: {ticket.seatNumber}</p>
           <p>Cost: {ethers.formatEther(ticket.cost)} ETH</p>
