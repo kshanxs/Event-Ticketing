@@ -90,15 +90,40 @@ label {
   margin-bottom: 10px;
   padding: 20px;
 }
-
+ /****************/
+ /* BUY PAGE     */
+ .ticket-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center; 
+  
+  border-radius: 10px;
+  margin: 5px;
+  padding: 5px
+}
 .ticket-tile {
   border: 1px solid black;
   padding: 10px;
   margin: 10px;
   box-sizing: border-box;
   display: inline-block;
-  width: calc(100% / 4 - 20px); /* replace 4 with the number of tiles per row  */
+  width: 100%;
+  height: 200px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
+
+.ticket-tile h2 {
+  margin: 0;
+}
+
+.ticket-tile p {
+  margin: 0;
+}
+
 
 .mint-input {
   width: 30px;

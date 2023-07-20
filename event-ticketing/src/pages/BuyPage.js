@@ -23,7 +23,7 @@ const BuyPage = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       if (contract) {
-        const totalTickets = await contract.getNumTicketsMinted();
+        const totalTickets = await contract.getNumTicketsMinted();// later this needs to be
         console.log ("total minted tickets so far:", totalTickets.toString());
        
         const tickets = [];
@@ -50,6 +50,10 @@ const BuyPage = () => {
     console.log(eventTicketing)
    
     setContract(eventTicketing)
+
+
+
+
 
    /*  window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -80,14 +84,13 @@ const BuyPage = () => {
 
   return (
     <div>
-          <div> <h1 className='header'>BCAMP 2023 - BUY YOUR TICKET NOW!</h1></div>
+          <div> <h1 className='header'>Event Dashboard</h1></div>
         <p>Please enter the smart contract address of your event in the field below:</p>
       <input
-        type="event smart contract address here"
         placeholder="Enter contract address"
         onChange={(e) => setContractAddress(e.target.value)}
       />
-    
+    <div className="ticket-container">
     {tickets.map((ticket, index) => (
         <div key={index} className="ticket-tile">
           <h2>Ticket {index + 1}</h2>
@@ -96,14 +99,12 @@ const BuyPage = () => {
           <button onClick={() => buyTicket(index)}>Buy</button>
         </div>
       ))}
+</div>
 
-    <button className='showTickets' onClick={async() => 
-        {
-         console.log("contract is: ", contract);
-        }
-        }>Show Event Tickets!</button>
-    <label>Your Wallet Address: {}</label>
-    <label>Number of Tickets Left: {}</label>
+<button className="showTickets" onClick={async () => loadBlockchainData()}>
+      Refresh Tickets!</button>
+   
+    
     </div>
   );
 };
