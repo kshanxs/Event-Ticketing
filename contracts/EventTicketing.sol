@@ -82,7 +82,7 @@ import "hardhat/console.sol";
     }
 
   
-     function batchMint(uint256 mintQuantity) public {
+     function batchMint(uint256 mintQuantity) public onlyOwner {
         uint256 seatId = _seatIdCounter.current();
         require(seatId + mintQuantity <= maxTickets, "Max number of tickets already minted or batch will be too large");
         require(mintQuantity > 1, "Need to mint some!");
@@ -134,7 +134,7 @@ import "hardhat/console.sol";
 
     }
 
-    function batchTicket(uint256 _ticketId, uint256 _seatNumber, uint256 _cost, uint256 _date, uint256 batchSize) public {
+    function batchTicket(uint256 _ticketId, uint256 _seatNumber, uint256 _cost, uint256 _date, uint256 batchSize) public onlyOwner {
         uint256 internalTicket = _ticketId;
         for(uint256 i = 0; i < batchSize; i++){
             createTicket(_ticketId, _seatNumber, _cost, _date);
