@@ -1,9 +1,15 @@
 // Require the package
 const QRCode = require('qrcode')
-const ethers = require('ethers');
 const contract = require('../artifacts/contracts/EventTicketing.sol/EventTicketing.json')
 const contractABI = contract.abi;
- 
+const Web3 = require('web3').default;
+
+const fs = require('fs');
+const path = require('path');
+
+
+
+
 const createQRCode = (seatNumber, cost, date, hasBeenScanned, isValid, purchaser) => {
     let data = {
         SeatNumber: seatNumber,
@@ -14,7 +20,7 @@ const createQRCode = (seatNumber, cost, date, hasBeenScanned, isValid, purchaser
         Owner: purchaser
     }
     let stringData = JSON.stringify(data);
-
+    
     QRCode.toFile(`./QRCodes/${seatNumber}.png`, stringData, {
         color: {
           dark: '#000',  // Black dots
@@ -30,25 +36,54 @@ const createQRCode = (seatNumber, cost, date, hasBeenScanned, isValid, purchaser
 //for(var i = 0; i < 3; i++){
 //    createQRCode(i, "BCAMP is the Best", "I love BCAMP", "We have fun", "Ha ha ha good times", "How cool is this?"); 
 //}
-async function main() {
-    // Connect to an Ethereum node
-    console.log("is this running?")
-    console.log("ethers", ethers)
-    const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
-    //const provider = new ethers.providers.JsonRpcProvider("https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID");
 
+async function main() {
+    console.log("is this running?");
+
+    // Create a Web3 instance
+    const web3 = new Web3('http://127.0.0.1:8545/');
+    //const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID');
 
     // Address of the deployed contract (replace with your contract's)
     const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
     // Create a contract instance
-    const contract = new ethers.Contract(contractAddress, contractABI, provider);
-    const loop = contract.maxTickets();
-    // Now you can call your contract's methods
-    
-    
-    const result = await contract.maxTickets();
-    console.log(result);
-}
- main();
+    const contract = new web3.eth.Contract(contractABI, contractAddress);
 
+    let totalTicketInfo = {};
+
+    //call contract 
+    const result = await contract.methods.maxTickets().call();
+
+    const dir = './QRCodeJSONData';
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
+
+    for(var i = 0; i < Number(result); i++){
+        let ticketCall = await contract.methods.tickets(i).call();
+        let ticket = {
+            SeatNumber: Number(ticketCall.seatNumber),
+            Cost: Number(ticketCall.cost),
+            Date: Number(ticketCall.date),
+            ScanStatus: ticketCall.hasBeenScanned,
+            Valid: ticketCall.isValid,
+            Owner: ticketCall.purchaser
+        }
+        let stringData = JSON.stringify(ticket);
+        totalTicketInfo[i] = ticket;
+        //creating QR Code and saving it to file
+        createQRCode(ticket.SeatNumber, ticket.Cost, ticket.Date, ticket.HasBeenScanned, ticket.Valid, ticket.Purchaser);
+        //Writing JSON data and writing it to file 
+        fs.writeFileSync(path.join(dir, `${ticket.SeatNumber}.json`), stringData, 'utf-8', function(err) {
+            if (err) throw err
+            console.log(`Data saved at: ${path.join(dir, `${seatNumber}.json`)}`);
+        });
+    }
+    
+    
+    console.log(totalTicketInfo);
+    
+}
+
+main();
