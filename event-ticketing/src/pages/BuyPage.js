@@ -75,7 +75,10 @@ const BuyPage = () => {
         const numMinted = await contract.getNumTicketsMinted();
         console.log("minted",numMinted.toString());
         console.log("seat requested:", _seat);
+       
         const signer = await provider.getSigner()
+      
+        console.log("ticket is", contract.tickets[signer]);
         console.log("signer is:", signer);
         const transaction = await contract.connect(signer).buyTicket(_seat, 0, { value: cost } )
         await transaction.wait()

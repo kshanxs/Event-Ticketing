@@ -114,6 +114,7 @@ label {
   display: flex;
   flex-direction: column;
   overflow: auto;
+  border-radius: 10px;
 }
 
 .ticket-tile h2 {
