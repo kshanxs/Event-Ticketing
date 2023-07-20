@@ -14,7 +14,9 @@ const EventPage = (props) => {
           <input value={props.eventDate} onChange={(e) => props.setEventDate(e.target.value)} placeholder="Event Date (2023-07-10)" />
           <input value={props.eventTime} onChange={(e) => props.setEventTime(e.target.value)} placeholder="Event Time (12:00)" />
           <button className='deploy-button' onClick={props.deployContract}>Create Event</button>
-          <label value={props.contractAddress}></label>
+          {props.contractAddress !== "" && (
+        <label><b>Contract deployed to:  </b>{props.contractAddress}</label>
+      )}
         </div>
       </div>
     );
@@ -34,7 +36,8 @@ const EventPage = (props) => {
     eventTime: PropTypes.string.isRequired,
     setEventTime: PropTypes.func.isRequired,
     deployContract: PropTypes.func.isRequired,
-    contractAddress: PropTypes.string.isRequired};
+    contractAddress: PropTypes.string.isRequired,
+    setContractAddress: PropTypes.func.isRequired,};
 
   export default EventPage;
   
