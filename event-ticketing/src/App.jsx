@@ -23,7 +23,7 @@ const App = () => {
   const [contractAddress, setContractAddress] = useState("");
   const provider = new ethers.BrowserProvider(window.ethereum);
 
-  const cost = ethers.parseUnits('1', 'ether')
+  //const cost = ethers.parseUnits('1', 'ether')
 
   const convertDateTime = async () => {
     const eventDateTime = `${eventDate} ${eventTime}`;
@@ -54,13 +54,9 @@ const App = () => {
     setContractAddress(eventTicketing.target);
     console.log("EventTicketing deployed to:", eventTicketing.target);
 
-    // Mint Tickets for this event
-    for (let i = 0; i < maxTickets; i++) {
-      await eventTicketing.safeMint()
-      await eventTicketing.createTicket(i, i, cost, BigInt(eventDateTime))  
-    }
-    
   };
+
+ 
   
 
   return (
@@ -79,6 +75,8 @@ const App = () => {
                                   setEventDate={setEventDate}
                                   eventTime={eventTime}
                                   setEventTime={setEventTime}
+                                  eventDateTime={eventDateTime}
+                                  setEventDateTime={setEventDateTime}
                                   contract={contract}
                                   setContract={setContract}
                                   contractAddress={contractAddress}
