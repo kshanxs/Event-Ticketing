@@ -1,4 +1,7 @@
+const { ethers } = require("hardhat");
+
 async function main() {
+  console.log("is this running 1?")
   const EventTicketing = await ethers.getContractFactory("EventTicketing");
 
   // add constructor parameters here
@@ -8,8 +11,9 @@ async function main() {
   const eventTime = Math.floor(1703484000);  // replace with your value (in UNIX timestamp)
 
   const eventTicketing = await EventTicketing.deploy(maxTickets, eventLocation, eventName, eventTime);
+  console.log("is this running? 2")
   console.log(eventTicketing)
-  console.log("EventTicketing deployed to:", eventTicketing.target);
+  console.log("EventTicketing deployed to:", eventTicketing);
 }
 
 main()

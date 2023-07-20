@@ -8,18 +8,12 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-<<<<<<< HEAD
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-
-
-/// @custom:security-contact @Bigbadbeard
-contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, AccessControl, IERC721Receiver {
-=======
 import "hardhat/console.sol";
+
 
 /// @custom:security-contact @Bigbadbeard
  contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, AccessControl, IERC721Receiver {
->>>>>>> d15ea834949384988fb17fce02b29f64f6910954
     using Counters for Counters.Counter;
 
     Counters.Counter private _seatIdCounter;
@@ -243,22 +237,6 @@ import "hardhat/console.sol";
         require(tickets[ticketId].isValid != false, "Ticket doesn't exist!");
         bool _isValid = tickets[ticketId].isValid;
         return _isValid;
-<<<<<<< HEAD
-    }
-
-    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) 
-    public 
-    override 
-    returns (bytes4) {
-        // handle the received token here
-        // you can store token information in a mapping and use it in other functions 
-
-        // Return this function's selector
-        return this.onERC721Received.selector;
     }
 
 }
-=======
-    }  
-}
->>>>>>> d15ea834949384988fb17fce02b29f64f6910954
