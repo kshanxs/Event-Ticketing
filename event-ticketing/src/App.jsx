@@ -23,14 +23,20 @@ const App = () => {
   const [contractAddress, setContractAddress] = useState("");
   const provider = new ethers.BrowserProvider(window.ethereum);
 
-  const cost = ethers.parseUnits('1', 'ether')
+  //const cost = ethers.parseUnits('1', 'ether')
 
   const convertDateTime = async () => {
+    console.log("event Time", eventTime);
+    console.log("event date", eventDate);
+
     const eventDateTime = `${eventDate} ${eventTime}`;
+    console.log (eventDateTime);
     const dateObject = new Date(eventDateTime);
+    console.log(dateObject)
     const unixTimestamp = dateObject.getTime();
     const unixTimestampInSeconds = Math.floor(unixTimestamp / 1000);
     const timeInUint256 = dateObject.getHours() * 3600 + dateObject.getMinutes() * 60;
+    console.log(timeInUint256);
     setEventDateTime(unixTimestampInSeconds * Math.pow(2, 128) + (timeInUint256));
   }
 
@@ -41,7 +47,8 @@ const App = () => {
     const EventTicketingBytecode = eventTicketingArtifact.bytecode;
     const EventTicketingFactory = new ethers.ContractFactory(EventTicketingABI, EventTicketingBytecode, signer);
     
-    convertDateTime();
+    await convertDateTime();
+    console.log("eventDateTime: " + BigInt(eventDateTime))
  
     const eventTicketing = await EventTicketingFactory.deploy(
       maxTickets, 
@@ -54,13 +61,9 @@ const App = () => {
     setContractAddress(eventTicketing.target);
     console.log("EventTicketing deployed to:", eventTicketing.target);
 
-    // Mint Tickets for this event
-    for (let i = 0; i < maxTickets; i++) {
-      await eventTicketing.safeMint()
-      await eventTicketing.createTicket(i, i, cost, BigInt(eventDateTime))  
-    }
-    
   };
+
+ 
   
 
   return (
@@ -79,6 +82,8 @@ const App = () => {
                                   setEventDate={setEventDate}
                                   eventTime={eventTime}
                                   setEventTime={setEventTime}
+                                  eventDateTime={eventDateTime}
+                                  setEventDateTime={setEventDateTime}
                                   contract={contract}
                                   setContract={setContract}
                                   contractAddress={contractAddress}
