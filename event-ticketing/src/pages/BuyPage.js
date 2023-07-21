@@ -162,9 +162,9 @@ const BuyPage = () => {
     <p><b>Seat Number:</b> {ticket.seatNumber.toString()}</p>
     <p><b>Cost:</b> {ethers.formatEther(ticket.cost)} ETH</p>
     {ticket.purchaser === AddressZero ? (
-      <p>This ticket is available for purchase.</p>
+      <h4>This ticket is available for purchase.</h4>
     ) : (
-      <p>This ticket has been purchased by address:<br></br> {ticket.purchaser}</p>
+      <h4>This ticket has been purchased by address:<br></br> {ticket.purchaser}</h4>
       
     )}
    
