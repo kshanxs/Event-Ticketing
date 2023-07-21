@@ -1,5 +1,6 @@
 //contract address: 0x5FbDB2315678afecb367f032d93F642f64180aa3 goerli is 0x9f125B256910F074cCe8c2854eAc4Be4686Fd3f2
 //import PropTypes from 'prop-types';
+import qrCode from '../assets/qrcode.png'
 
 import React, { useState, useEffect } from 'react';
 
@@ -21,6 +22,7 @@ const BuyPage = () => {
    // const [maxTickets, setMaxTickets] = useState(null);
     const [contract, setContract] = useState(null);
     const [contractAddress, setContractAddress] = useState('');
+    //const [ticketPurchase, setTicketPurchase] = useState(false);
 
     const AddressZero = '0x0000000000000000000000000000000000000000';
 
@@ -118,6 +120,7 @@ const BuyPage = () => {
         console.log("signer is:", signer);
         const transaction = await contract.connect(signer).buyTicket(_seat, 0, { value: cost } )
         await transaction.wait()
+        //setTicketPurchase(true);
     }
   }; 
 
@@ -153,6 +156,8 @@ const BuyPage = () => {
 
 {tickets.map((ticket, index) => (
   <div key={index} className={`ticket-tile ${ticket.purchaser === 0 ? 'grayed-out' : ''}`}>
+  <div className='container'>
+   <div>
     <h2>Ticket {index + 1}</h2><br></br>
     <p><b>Seat Number:</b> {ticket.seatNumber.toString()}</p>
     <p><b>Cost:</b> {ethers.formatEther(ticket.cost)} ETH</p>
@@ -166,8 +171,13 @@ const BuyPage = () => {
     <button onClick={() => buyTicket(index)} disabled={ticket.purchaser !== AddressZero}>
       {ticket.purchaser === AddressZero ? 'Buy' : 'Sold'}
     </button>
-    
+    </div>
+    <div>
+    <img src={qrCode} alt="QR Code" />
+      </div>
+      </div>
   </div>
+  
 ))}
 
 
