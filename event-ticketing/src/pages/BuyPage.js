@@ -128,9 +128,9 @@ const BuyPage = () => {
         <div>
           <h1 className="header">{eventName}</h1>
           <div className="event-details">
-          <p>Event Time: {eventTime}</p>
-          <p>Event Date: {eventDate}</p>    
-          <p>Event Location: {eventLocation}</p>
+          <p><b>Event Time:</b> {eventTime}</p>
+          <p><b>Event Date:</b> {eventDate}</p>    
+          <p><b>Event Location:</b> {eventLocation}</p>
         </div>
         </div>
       )}
@@ -154,8 +154,8 @@ const BuyPage = () => {
 {tickets.map((ticket, index) => (
   <div key={index} className={`ticket-tile ${ticket.purchaser === 0 ? 'grayed-out' : ''}`}>
     <h2>Ticket {index + 1}</h2><br></br>
-    <p>Seat Number: {ticket.seatNumber.toString()}</p>
-    <p>Cost: {ethers.formatEther(ticket.cost)} ETH</p>
+    <p><b>Seat Number:</b> {ticket.seatNumber.toString()}</p>
+    <p><b>Cost:</b> {ethers.formatEther(ticket.cost)} ETH</p>
     {ticket.purchaser === AddressZero ? (
       <p>This ticket is available for purchase.</p>
     ) : (
