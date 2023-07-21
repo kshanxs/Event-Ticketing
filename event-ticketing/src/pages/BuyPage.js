@@ -164,7 +164,7 @@ const BuyPage = () => {
     {ticket.purchaser === AddressZero ? (
       <p>This ticket is available for purchase.</p>
     ) : (
-      <p>This ticket has been purchased by address: {ticket.purchaser}</p>
+      <p>This ticket has been purchased by address:<br></br> {ticket.purchaser}</p>
       
     )}
    
