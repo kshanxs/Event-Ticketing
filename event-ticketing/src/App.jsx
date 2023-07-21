@@ -26,11 +26,17 @@ const App = () => {
   //const cost = ethers.parseUnits('1', 'ether')
 
   const convertDateTime = async () => {
+    console.log("event Time", eventTime);
+    console.log("event date", eventDate);
+
     const eventDateTime = `${eventDate} ${eventTime}`;
+    console.log (eventDateTime);
     const dateObject = new Date(eventDateTime);
+    console.log(dateObject)
     const unixTimestamp = dateObject.getTime();
     const unixTimestampInSeconds = Math.floor(unixTimestamp / 1000);
     const timeInUint256 = dateObject.getHours() * 3600 + dateObject.getMinutes() * 60;
+    console.log(timeInUint256);
     setEventDateTime(unixTimestampInSeconds * Math.pow(2, 128) + (timeInUint256));
   }
 
@@ -41,7 +47,8 @@ const App = () => {
     const EventTicketingBytecode = eventTicketingArtifact.bytecode;
     const EventTicketingFactory = new ethers.ContractFactory(EventTicketingABI, EventTicketingBytecode, signer);
     
-    convertDateTime();
+    await convertDateTime();
+    console.log("eventDateTime: " + BigInt(eventDateTime))
  
     const eventTicketing = await EventTicketingFactory.deploy(
       maxTickets, 
