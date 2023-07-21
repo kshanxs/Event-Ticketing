@@ -8,7 +8,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "hardhat/console.sol";
+
 
 /// @custom:security-contact @Bigbadbeard
  contract EventTicketing is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, AccessControl, IERC721Receiver {
@@ -64,8 +66,6 @@ import "hardhat/console.sol";
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
     
-    
-
     function _baseURI() internal pure override returns (string memory) {
         return "http://www.tobedetermined.com";
     }
@@ -235,5 +235,6 @@ import "hardhat/console.sol";
         require(tickets[ticketId].isValid != false, "Ticket doesn't exist!");
         bool _isValid = tickets[ticketId].isValid;
         return _isValid;
-    }  
+    }
+
 }
