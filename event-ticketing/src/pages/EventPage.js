@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { useState, useEffect } from 'react'
+//import QRWriter from '../../../src/qrwriter.js' doesn't like the location.
 
 import { ethers } from 'ethers';
 
@@ -11,6 +12,7 @@ const EventPage = props => {
   const [numTicketsToMint, setNumTicketsToMint] = useState(props.maxTickets)
   const [ticketsMinted, setTicketsMinted] = useState(0)
   const [ticketsCreated, setTicketsCreated] = useState(0)
+  const [qrCodesCreated, setQRCodesCreated] = useState(0)
 
   // For Creating Tickets
   const [showModal, setShowModal] = useState(false)
@@ -59,6 +61,11 @@ const EventPage = props => {
 
   const closeModal = () => {
     setShowModal(false)
+  }
+
+  const simulateQRCodes = async () => {
+    const num = await props.contract.getNumTicketsMinted()
+    setQRCodesCreated (num)
   }
 
   useEffect(() => {
@@ -144,6 +151,22 @@ const EventPage = props => {
               <p>
                 <b>Tickets left to create:</b> {ticketsMinted - ticketsCreated}
               </p>
+            </div>
+
+            <hr></hr>
+              <h2>Step 4: Generate QR Codes!</h2>
+              <div className='container'>
+              <div className='button-container'>
+            
+                <button disabled={ticketsCreated == 0 || qrCodesCreated==ticketsCreated} onClick={() => simulateQRCodes()}>Generate QR(s)</button>
+                 
+                {ticketsCreated > 0 && <label className='note'> Generates 1 QR per Ticket</label>}
+                {ticketsCreated == 0 && <label className='note'> Please Create A Ticket</label>}
+              </div>
+              <p>
+                <b>Number of QR Codes created:</b> {qrCodesCreated.toString()}
+              </p>
+              
             </div>
             
 
