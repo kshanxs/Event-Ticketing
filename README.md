@@ -1,6 +1,19 @@
 # Event-Ticketing_June2023
 
-To Run Tests: ```npm run test```
+Installation & Configuration Instructions Below:
+Step 0:```git clone https://github.com/0xBcamp/Event-Ticketing_June2023.git```
+Step 1:```npm install``````
+Step 2:```npm run compile```
+Step 3:```npm run test```
+Step 4: ```npm run node```
+Step 5: ```npm run deploy```
+Step 6: ```cd event-ticketing```
+Step 7: ```npm install```
+Step 8: ```npm run start```
+Step 9: ```Navigate to http://localhost:3000/```
+Step 10: ```Navigate to http://localhost:3000/buy```
+
+
 
 
 NFT Ticket/Event Attributes: <br>  
