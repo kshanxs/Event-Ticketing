@@ -160,8 +160,9 @@ const EventPage = props => {
             
                 <button disabled={ticketsCreated == 0 || qrCodesCreated==ticketsCreated} onClick={() => simulateQRCodes()}>Generate QR(s)</button>
                  
-                {ticketsCreated > 0 && <label className='note'> Generates 1 QR per Ticket</label>}
-                {ticketsCreated == 0 && <label className='note'> Please Create A Ticket</label>}
+                {ticketsCreated > 0 && qrCodesCreated !== ticketsCreated && <label className='note'> Generates 1 QR per Ticket</label>}
+                {ticketsCreated === 0 || qrCodesCreated === ticketsCreated && <label className='note'> Please Create more Tickets</label>}
+
               </div>
               <p>
                 <b>Number of QR Codes created:</b> {qrCodesCreated.toString()}
