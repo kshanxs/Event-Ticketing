@@ -1,17 +1,17 @@
 # Event-Ticketing_June2023
 
 Installation & Configuration Instructions <b><i>(For Local Host Only)</b></i><br>
-Step 1 ```git clone https://github.com/0xBcamp/Event-Ticketing_June2023.git```
-Step 2:```npm install```
-Step 3:```npm run compile```
-Step 4:```npm run test```
-Step 5: ```npm run node```
-Step 6: ```npm run deploy```
-Step 7: ```cd event-ticketing```
-Step 8: ```npm install```
-Step 9: ```npm run start```
-Step 10: ```Navigate to http://localhost:3000/```
-Step 11: ```Navigate to http://localhost:3000/buy```
+Step 1 ```git clone https://github.com/0xBcamp/Event-Ticketing_June2023.git```<br>
+Step 2:```npm install```<br>
+Step 3:```npm run compile```<br>
+Step 4:```npm run test```<br>
+Step 5: ```npm run node```<br>
+Step 6: ```npm run deploy```<br>
+Step 7: ```cd event-ticketing```<br>
+Step 8: ```npm install```<br>
+Step 9: ```npm run start```<br>
+Step 10: ```Navigate to http://localhost:3000/```<br>
+Step 11: ```Navigate to http://localhost:3000/buy```<br>
 
 
 
