@@ -5,7 +5,7 @@ Step 1 ```git clone https://github.com/0xBcamp/Event-Ticketing_June2023.git```<b
 Step 2:```npm install```<br>
 Step 3:```npm run compile```<br>
 Step 4:```npm run test```<br>
-Step 5: ```npm run strt:local```<br>
+Step 5: ```npm run start:local```<br>
 Step 6: ```npm run deploy```<br>
 Step 7: ```cd event-ticketing```<br>
 Step 8: ```npm install```<br>
