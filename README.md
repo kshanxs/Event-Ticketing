@@ -1,5 +1,8 @@
 # Event-Ticketing_June2023
 
+[alt text](https://github.com/0xBcamp/Event-Ticketing_June2023/blob/main/src/images/creator-dashboard.png)
+[alt text](https://github.com/0xBcamp/Event-Ticketing_June2023/blob/main/src/images/user-dashboard.png)
+
 Installation & Configuration Instructions <b><i>(For Local Host Only)</b></i><br>
 Step 1 ```git clone https://github.com/0xBcamp/Event-Ticketing_June2023.git```<br>
 Step 2:```npm install```<br>
