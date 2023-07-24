@@ -61,5 +61,7 @@ https://www.optimism.io/attestation-terms <br>
 5. Need to prevent double spending
 6. Neet to prevent front-running
 
+   Authors: Travis Richardson & Ben Rasmussen
+
 
  
