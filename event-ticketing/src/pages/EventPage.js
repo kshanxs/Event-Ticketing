@@ -21,6 +21,9 @@ const EventPage = props => {
   const [cost, setCost] = useState(ethers.parseUnits('0', 'ether'))
   const [errorMsg, setErrorMsg] = useState('')
 
+  const [retryDeploy, setRetryDeploy] = useState(false)
+  const [deployError, setDeployError] = useState('')
+
   const mintTickets = async (_numTickets) => {
     for (let i = 0; i < _numTickets; i++) {
       const tx = await props.contract.safeMint()
@@ -79,6 +82,19 @@ const EventPage = props => {
     fetchTicketsMinted()
   }, [props.contract])
 
+  // Wrap deployContract call with error handling and retry logic
+  const handleCreateEvent = async () => {
+    setDeployError('')
+    setRetryDeploy(false)
+    try {
+      await props.deployContract()
+      setEventCreated(true)
+    } catch (err) {
+      setDeployError(err.message || 'Transaction failed')
+      setRetryDeploy(true)
+    }
+  }
+
   return (
     <div>
       <div>
@@ -89,20 +105,45 @@ const EventPage = props => {
         <h2>Step 1: Please enter your event data by filling out the fields below:</h2>
       
       <div className='App'>
-        <input value={props.maxTickets} onChange={e => props.setMaxTickets(e.target.value)} placeholder='Max Tickets' />
+        <input
+          type="number"
+          value={props.maxTickets}
+          onChange={e => props.setMaxTickets(e.target.value)}
+          placeholder='Max Tickets'
+        />
         <input
           value={props.eventLocation}
           onChange={e => props.setEventLocation(e.target.value)}
           placeholder='Event Location'
         />
-        <input value={props.eventName} onChange={e => props.setEventName(e.target.value)} placeholder='Event Name' />
-        <input value={props.eventDate} onChange={(e) => props.setEventDate(e.target.value)} placeholder="Event Date (2023-07-10)" />
         <input
+          value={props.eventName}
+          onChange={e => props.setEventName(e.target.value)}
+          placeholder='Event Name'
+        />
+        <input
+          type="date"
+          value={props.eventDate}
+          onChange={e => props.setEventDate(e.target.value)}
+          placeholder="Event Date"
+        />
+        <input
+          type="time"
           value={props.eventTime}
           onChange={e => props.setEventTime(e.target.value)}
-          placeholder='Event Time (12:00)'
+          placeholder='Event Time'
         />
-        <button onClick={() => { props.deployContract(); setEventCreated(); }}>Create Event</button>
+        <button onClick={handleCreateEvent}>Create Event</button>
+        {deployError && (
+          <div className="error-message">
+            Transaction failed or denied. Please try again.
+            {retryDeploy && (
+              <button onClick={handleCreateEvent} style={{ marginLeft: 8 }}>
+                Retry
+              </button>
+            )}
+          </div>
+        )}
         {props.contractAddress !== '' && (
           <>
             <label>

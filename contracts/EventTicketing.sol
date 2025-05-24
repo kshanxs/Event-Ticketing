@@ -70,8 +70,13 @@ import "hardhat/console.sol";
         return "http://www.tobedetermined.com";
     }
 
-    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external override returns (bytes4) {
-        return this.onERC721Received.selector;
+    function onERC721Received(
+    address, 
+    address, 
+    uint256, 
+    bytes calldata
+) external pure override returns (bytes4) {
+    return this.onERC721Received.selector;
     }
 
     function safeMint() public onlyOwner {
